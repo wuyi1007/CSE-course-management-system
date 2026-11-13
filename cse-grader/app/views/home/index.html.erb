@@ -1,0 +1,170 @@
+<!-- Hero Section -->
+<section class="hero content-section">
+  <div class="container-wide">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        CSE Grader Management System
+      </h1>
+      <p class="hero-subtitle">
+        Streamlining the process of matching qualified students with specific course sections. This system replaces the ad-hoc email-based approach currently used by the CSE department.
+      </p>
+      <div class="hero-actions">
+        <% if user_signed_in? %>
+          <%= link_to "Browse Courses", catalog_index_path, 
+              class: "btn btn-primary btn-lg" %>
+          <% if current_user.admin? %>
+            <%= link_to "Manage Courses", admin_courses_path, 
+                class: "btn btn-secondary btn-lg" %>
+            <%= link_to "User Approvals", admin_catalogs_approvals_path, 
+                class: "btn btn-outline btn-lg" %>
+          <% end %>
+        <% else %>
+          <%= link_to "Get Started", new_user_registration_path, 
+              class: "btn btn-primary btn-lg" %>
+          <%= link_to "Sign In", new_user_session_path, 
+              class: "btn btn-secondary btn-lg" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="content-section" style="background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px);">
+  <div class="container-wide">
+    <div class="text-center mb-xl">
+      <h2 class="text-3xl font-bold mb-md" style="color: var(--gray-800);">
+        CSE Department Grader Workflow
+      </h2>
+      <p class="text-lg" style="color: var(--gray-600); max-width: 800px; margin: 0 auto; line-height: 1.7;">
+        This system helps streamline the process of matching qualified students with specific course sections, replacing the current ad hoc email-based approach. Some courses require graders to be available during specific lab times (e.g., CSE 2221 and 2231), where graders must be available during lab sections. The CSE department hires about 60 undergraduate students as graders each semester.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-3" style="margin-top: var(--spacing-2xl);">
+      <!-- For Students -->
+      <div class="card">
+        <div style="width: 4rem; height: 4rem; background: var(--osu-scarlet); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-lg);">
+          <svg style="width: 2rem; height: 2rem; color: var(--white);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-semibold mb-md" style="color: var(--gray-800);">For Students</h3>
+        <p style="color: var(--gray-600); margin-bottom: var(--spacing-lg); line-height: 1.6;">
+          Browse available grader positions and view course details to find positions that match your skills and availability.
+        </p>
+        <ul style="text-align: left; color: var(--gray-600); list-style: none; padding: 0;">
+          <li style="display: flex; align-items: center; margin-bottom: var(--spacing-sm);">
+            <svg style="width: 1.25rem; height: 1.25rem; color: var(--success); margin-right: var(--spacing-sm); flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            Browse CSE course catalog
+          </li>
+          <li style="display: flex; align-items: center; margin-bottom: var(--spacing-sm);">
+            <svg style="width: 1.25rem; height: 1.25rem; color: var(--success); margin-right: var(--spacing-sm); flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            View lab time requirements
+          </li>
+          <li style="display: flex; align-items: center; margin-bottom: var(--spacing-sm);">
+            <svg style="width: 1.25rem; height: 1.25rem; color: var(--success); margin-right: var(--spacing-sm); flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            Express interest in grading
+          </li>
+        </ul>
+      </div>
+
+      <!-- For Instructors -->
+      <div class="card">
+        <div style="width: 4rem; height: 4rem; background: var(--osu-scarlet); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-lg);">
+          <svg style="width: 2rem; height: 2rem; color: var(--white);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-semibold mb-md" style="color: var(--gray-800);">For Instructors</h3>
+        <p style="color: var(--gray-600); margin-bottom: var(--spacing-lg); line-height: 1.6;">
+          Request graders for your course sections and recommend qualified students for grading positions.
+        </p>
+        <ul style="text-align: left; color: var(--gray-600); list-style: none; padding: 0;">
+          <li style="display: flex; align-items: center; margin-bottom: var(--spacing-sm);">
+            <svg style="width: 1.25rem; height: 1.25rem; color: var(--success); margin-right: var(--spacing-sm); flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            View your courses
+          </li>
+          <li style="display: flex; align-items: center; margin-bottom: var(--spacing-sm);">
+            <svg style="width: 1.25rem; height: 1.25rem; color: var(--success); margin-right: var(--spacing-sm); flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            Request graders
+          </li>
+          <li style="display: flex; align-items: center; margin-bottom: var(--spacing-sm);">
+            <svg style="width: 1.25rem; height: 1.25rem; color: var(--success); margin-right: var(--spacing-sm); flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            Recommend students
+          </li>
+        </ul>
+      </div>
+
+      <!-- For Administrators -->
+      <div class="card">
+        <div style="width: 4rem; height: 4rem; background: var(--osu-scarlet); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-lg);">
+          <svg style="width: 2rem; height: 2rem; color: var(--white);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-semibold mb-md" style="color: var(--gray-800);">For Administrators</h3>
+        <p style="color: var(--gray-600); margin-bottom: var(--spacing-lg); line-height: 1.6;">
+          Manage user approvals, maintain course data from the OSU API, and oversee the grader assignment process.
+        </p>
+        <ul style="text-align: left; color: var(--gray-600); list-style: none; padding: 0;">
+          <li style="display: flex; align-items: center; margin-bottom: var(--spacing-sm);">
+            <svg style="width: 1.25rem; height: 1.25rem; color: var(--success); margin-right: var(--spacing-sm); flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            User management
+          </li>
+          <li style="display: flex; align-items: center; margin-bottom: var(--spacing-sm);">
+            <svg style="width: 1.25rem; height: 1.25rem; color: var(--success); margin-right: var(--spacing-sm); flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            Course data management
+          </li>
+          <li style="display: flex; align-items: center; margin-bottom: var(--spacing-sm);">
+            <svg style="width: 1.25rem; height: 1.25rem; color: var(--success); margin-right: var(--spacing-sm); flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            System oversight
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="content-section" style="background: linear-gradient(135deg, var(--osu-scarlet) 0%, #c41e3a 100%); color: white;">
+  <div class="container-wide">
+    <div class="text-center">
+      <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: var(--spacing-lg); color: white;">
+        Ready to Get Started?
+      </h2>
+      <p style="font-size: 1.25rem; margin-bottom: var(--spacing-xl); opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto;">
+        Join the CSE community and discover opportunities to contribute as a grader while advancing your academic journey.
+      </p>
+      
+      <% unless user_signed_in? %>
+        <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+          <%= link_to "Create Account", new_user_registration_path, 
+              class: "btn btn-lg",
+              style: "background: white; color: var(--osu-scarlet); font-weight: 600; padding: 0.75rem 2rem; border-radius: var(--radius-md); transition: all var(--transition-fast);" %>
+          <%= link_to "Sign In", new_user_session_path, 
+              class: "btn btn-lg",
+              style: "background: transparent; color: white; border: 2px solid white; font-weight: 600; padding: 0.75rem 2rem; border-radius: var(--radius-md); transition: all var(--transition-fast);" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>

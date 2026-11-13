@@ -1,0 +1,144 @@
+<!-- app/views/admin/catalogs/reload.html.erb -->
+
+<!-- Page Header -->
+<div class="bg-white border-b border-gray-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-dark">Reload Course Catalog</h1>
+        <p class="mt-2 text-gray-600">Update course data from OSU's API system</p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="text-right">
+          <div class="text-sm text-gray-500">Last Reload</div>
+          <div class="text-sm text-gray-600">Never</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Warning Alert -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-yellow-800">Warning: Data Overwrite</h3>
+        <div class="mt-2 text-sm text-yellow-700">
+          <p>This action will replace existing course data with fresh data from OSU's API. This cannot be undone.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reload Form -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow-sm rounded-lg">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-dark">API Reload Parameters</h3>
+      <p class="mt-1 text-sm text-gray-600">Configure the parameters for the course data reload</p>
+    </div>
+
+    <div class="px-6 py-6">
+      <%= form_with url: perform_reload_admin_catalog_path,
+                    method: :post,
+                    local: true,
+                    class: "space-y-6",
+                    data: { controller: "filter", action: "change->filter#updatePreview submit->filter#submitForm", filter_target: "form" } do %>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="term" class="form-label">Term Code</label>
+            <%= text_field_tag :term, params[:term] || "1262",
+                class: "form-input",
+                placeholder: "e.g., 1262",
+                data: { action: "input->filter#updatePreview" } %>
+            <p class="mt-1 text-sm text-gray-500">
+              Examples: 1262=Spring 2026 (The only one available)
+            </p>
+          </div>
+
+          <div>
+            <label for="campus" class="form-label">Campus</label>
+            <%= select_tag :campus,
+                options_for_select([
+                  ['Columbus (Main Campus)', 'col'],
+                  ['Lima', 'lma'],
+                  ['Mansfield', 'mns'],
+                  ['Marion', 'mrn'],
+                  ['Newark', 'nwk']
+                ], params[:campus] || 'col'),
+                class: "form-input",
+                data: { action: "change->filter#updatePreview" } %>
+            <p class="mt-1 text-sm text-gray-500">Select the campus to load courses for</p>
+          </div>
+        </div>
+
+        <div>
+          <label for="subject_filter" class="form-label">Subject Filter (Optional)</label>
+          <%= text_field_tag :subject_filter, params[:subject_filter],
+              class: "form-input",
+              placeholder: "e.g., CSE, MATH, STAT (leave empty for all subjects)",
+              data: { action: "input->filter#updatePreview" } %>
+          <p class="mt-1 text-sm text-gray-500">Leave empty to load all subjects, or specify a subject code</p>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="bg-gray-50 rounded-lg p-4" data-filter-target="preview">
+          <h4 class="text-sm font-medium text-gray-dark mb-2">Reload Preview</h4>
+          <div class="text-sm text-gray-600">
+            <p>This will reload course data for:</p>
+            <ul class="mt-2 ml-4 list-disc">
+              <li>Term: <span class="font-mono font-medium" id="preview-term">1248</span></li>
+              <li>Campus: <span class="font-medium" id="preview-campus">Columbus (Main Campus)</span></li>
+              <li>Subject: <span class="font-medium" id="preview-subject">All subjects</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+          <div class="text-sm text-gray-600">
+            <p>This operation may take a few minutes.</p>
+          </div>
+          <div class="flex items-center space-x-4">
+            <%= link_to "Cancel",
+                        approvals_admin_catalog_path,
+                        class: "bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-400 transition-all duration-200" %>
+            <%= submit_tag "Reload Course Data",
+                class: "bg-scarlet text-white px-6 py-3 rounded-lg font-medium hover:bg-scarlet-dark focus:outline-none focus:ring-2 focus:ring-scarlet focus:ring-offset-2 transition-all duration-200",
+                data: { confirm: "Are you sure you want to reload course data? This will overwrite existing data." } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Progress Section (Optional, driven by Stimulus) -->
+<div id="reload-progress" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 hidden" data-filter-target="progress">
+  <div class="bg-white shadow-sm rounded-lg">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-dark">Reload Progress</h3>
+    </div>
+    <div class="px-6 py-6">
+      <div class="flex items-center space-x-4">
+        <div class="spinner"></div>
+        <div>
+          <div class="text-sm font-medium text-gray-dark">Reloading course data...</div>
+          <div class="text-sm text-gray-600">This may take several minutes</div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="bg-gray-200 rounded-full h-2">
+          <div class="bg-scarlet h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

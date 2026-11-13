@@ -1,0 +1,247 @@
+<!-- Page Header -->
+<div class="card content-section" style="border-bottom: 1px solid var(--gray-200);">
+  <div class="container-wide">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1 class="text-3xl font-bold" style="color: var(--gray-800);">CSE Course Catalog</h1>
+        <p style="margin-top: var(--spacing-sm); color: var(--gray-600);">Browse and search Computer Science & Engineering courses</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+        <div style="text-align: right;">
+          <div class="text-sm" style="color: var(--gray-500);">Total Courses</div>
+          <div class="text-2xl font-bold" style="color: var(--osu-scarlet);">
+            <% if @pagy %>
+              <%= @pagy.count %>
+            <% else %>
+              0
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="card" style="border-bottom: 1px solid var(--gray-200);">
+  <div class="container-wide">
+    <%= form_with url: catalog_index_path, method: :get, local: true, class: "space-y-6" do %>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-md);">
+        <div class="form-group">
+          <label for="subject" class="form-label">Subject Code</label>
+          <%= text_field_tag :subject, params[:subject] || "CSE", 
+              class: "form-input", 
+              placeholder: "e.g., CSE, MATH, STAT" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="course_number" class="form-label">Course Number</label>
+          <%= text_field_tag :course_number, params[:course_number], 
+              class: "form-input", 
+              placeholder: "e.g., 2221" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="level" class="form-label">Course Level</label>
+          <%= select_tag :level, 
+              options_for_select([
+                ['All Levels', ''],
+                ['1000 Level', '1xxx'],
+                ['2000 Level', '2xxx'],
+                ['3000 Level', '3xxx'],
+                ['4000 Level', '4xxx'],
+                ['5000 Level', '5xxx']
+              ], params[:level]), 
+              class: "form-select" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="campus" class="form-label">Campus</label>
+          <%= select_tag :campus, 
+              options_for_select([
+                ['All Campuses', ''],  
+                ['Columbus (Main)', 'col'],
+                ['Lima', 'lma'],
+                ['Mansfield', 'mns'],
+                ['Marion', 'mrn'],
+                ['Newark', 'nwk']
+              ], params[:campus].presence || 'col'), 
+              class: "form-select" %>
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: var(--spacing-md); align-items: end;">
+        <div class="form-group">
+          <label for="term" class="form-label">Term</label>
+          <%= select_tag :term, 
+              options_for_select([
+                ['Spring 2026', '1262'],
+              ], params[:term] || '1262'), 
+              class: "form-select" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="q" class="form-label">Search Keywords</label>
+          <%= text_field_tag :q, params[:q], 
+              class: "form-input", 
+              placeholder: "Search course titles, descriptions..." %>
+        </div>
+        
+        <div class="form-actions">
+          <%= submit_tag "Search Courses", class: "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Results Section -->
+<div class="card">
+  <div class="container-wide">
+    <% if @courses && @courses.any? %>
+      <!-- Results Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+        <div>
+          <h2 style="color: var(--gray-800); font-size: 1.5rem; font-weight: 600;">
+            <%= pluralize(@pagy.count, 'Course') %> Found
+          </h2>
+          <% if params[:subject] || params[:q] || params[:level] || params[:campus] %>
+            <p style="color: var(--gray-600); margin-top: var(--spacing-sm);">
+              Filtered results
+              <%= link_to "Clear filters", catalog_index_path, 
+                  style: "color: var(--osu-scarlet); text-decoration: underline;" %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Courses Table -->
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md);">
+          <thead style="background: var(--gray-50);">
+            <tr>
+              <th style="padding: var(--spacing-md); text-align: left; font-weight: 600; color: var(--gray-700); border-bottom: 1px solid var(--gray-200);">Course</th>
+              <th style="padding: var(--spacing-md); text-align: left; font-weight: 600; color: var(--gray-700); border-bottom: 1px solid var(--gray-200);">Title & Description</th>
+              <th style="padding: var(--spacing-md); text-align: center; font-weight: 600; color: var(--gray-700); border-bottom: 1px solid var(--gray-200);">Term</th>
+              <th style="padding: var(--spacing-md); text-align: center; font-weight: 600; color: var(--gray-700); border-bottom: 1px solid var(--gray-200);">Campus</th>
+              <th style="padding: var(--spacing-md); text-align: center; font-weight: 600; color: var(--gray-700); border-bottom: 1px solid var(--gray-200);">Sections</th>
+              <th style="padding: var(--spacing-md); text-align: center; font-weight: 600; color: var(--gray-700); border-bottom: 1px solid var(--gray-200);">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @courses.each do |course| %>
+              <tr style="border-bottom: 1px solid var(--gray-100); transition: background-color var(--transition-fast);" onmouseover="this.style.backgroundColor='var(--gray-50)'" onmouseout="this.style.backgroundColor='white'">
+                <td style="padding: var(--spacing-md);">
+                  <div style="display: flex; align-items: center;">
+                    <span style="background: var(--osu-scarlet); color: white; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: var(--radius-sm);">
+                      <%= course.subject %>
+                    </span>
+                    <span style="margin-left: var(--spacing-sm); font-family: monospace; font-size: 1.125rem; font-weight: 700; color: var(--gray-800);">
+                      <%= course.catalog_number %>
+                    </span>
+                  </div>
+                </td>
+                <td style="padding: var(--spacing-md);">
+                  <div style="color: var(--gray-800); font-weight: 500;">
+                    <%= course.title %>
+                  </div>
+                  <% if course.short_description.present? %>
+                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: var(--spacing-xs);">
+                      <%= truncate(course.short_description, length: 100) %>
+                    </div>
+                  <% end %>
+                </td>
+                <td style="padding: var(--spacing-md); text-align: center;">
+                  <span style="background: #dbeafe; color: #1e40af; font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.5rem; border-radius: 9999px;">
+                    <%= course.term %>
+                  </span>
+                </td>
+                <td style="padding: var(--spacing-md); text-align: center;">
+                  <span style="color: var(--gray-600); font-size: 0.875rem;">
+                    <%= course.campus %>
+                  </span>
+                </td>
+                <td style="padding: var(--spacing-md); text-align: center;">
+                  <span style="background: #dcfce7; color: #166534; font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.5rem; border-radius: 9999px;">
+                    <%= pluralize(course.sections.count, 'section') %>
+                  </span>
+                </td>
+
+                
+              <td style="padding: var(--spacing-md); text-align: center;">
+                <button type="button"
+                    class="btn btn-sm btn-outline toggle-sections"  
+                    data-target="sections-<%= course.id %>">  
+                  View Sections
+                </button>
+              </td>
+              </tr>
+              <tr id="sections-<%= course.id %>" class="hidden">
+                <td colspan="6" style="background: var(--gray-50); padding: var(--spacing-md);">
+                  <% if course.sections.any? %>
+                    <ul style="margin-left: 1rem;">
+                      <% course.sections.order(:class_number).each do |section| %>
+                        <li>
+                          <strong><%= section.class_number %></strong>
+                          (<%= section.section_code %>) —
+                          <%= [section.component, section.instruction_mode].compact.join(" · ") %>
+                          <% if section.meeting_day.present? %>
+                            | Days: <%= section.meeting_day %>
+                          <% end %>
+                          <% if section.location.present? %>
+                            | Location: <%= section.location %>
+                          <% end %>
+                          <% if section.start_date && section.end_date %>
+                            | <%= section.start_date %> - <%= section.end_date %>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  <% else %>
+                    <em>No sections listed</em>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <% if @pagy && @pagy.pages > 1 %>
+        <div style="margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); border-top: 1px solid var(--gray-200);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="color: var(--gray-600);">
+              <%= pagination_info(@pagy) %>
+            </div>
+            <div>
+              <%== pagy_nav(@pagy) %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+    <% else %>
+      <!-- No Results -->
+      <div style="text-align: center; padding: var(--spacing-xl);">
+        <div style="font-size: 3rem; color: var(--gray-300); margin-bottom: var(--spacing-md);">📚</div>
+        <h3 style="color: var(--gray-700); font-size: 1.25rem; font-weight: 600; margin-bottom: var(--spacing-sm);">
+          No courses found
+        </h3>
+        <p style="color: var(--gray-600); margin-bottom: var(--spacing-lg);">
+          <% if params[:subject] || params[:q] || params[:level] || params[:campus] %>
+            Try adjusting your search criteria or 
+            <%= link_to "clear all filters", catalog_index_path, 
+                style: "color: var(--osu-scarlet); text-decoration: underline;" %>
+          <% else %>
+            No courses are currently available in the catalog.
+          <% end %>
+        </p>
+        <% if params[:subject] || params[:q] || params[:level] || params[:campus] %>
+          <%= link_to "Browse All Courses", catalog_index_path, 
+              class: "btn btn-primary" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

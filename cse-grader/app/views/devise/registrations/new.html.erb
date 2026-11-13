@@ -1,0 +1,96 @@
+<!-- Signup Page -->
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title">Create Your Account</h1>
+      <p class="auth-subtitle">Join the CSE Grader Management System</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "auth-form" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <%= f.label :email, "OSU Email Address", class: "form-label" %>
+        <%= f.email_field :email,
+            autofocus: true,
+            autocomplete: "email",
+            class: "form-input",
+            placeholder: "name.#@osu.edu" %>
+        <small class="form-help">Must be a valid OSU email address</small>
+      </div>
+
+      <!-- Role Selection -->
+      <div class="form-group">
+        <label class="form-label">Account Type</label>
+        <div class="space-y-3">
+          <div class="flex items-center">
+            <%= f.radio_button :role, "student",
+                class: "h-4 w-4 text-scarlet focus:ring-scarlet border-gray-300" %>
+            <%= f.label :role_student, "Student",
+                class: "ml-3 block text-sm font-medium text-gray-900" %>
+          </div>
+          <div class="flex items-center">
+            <%= f.radio_button :role, "instructor",
+                class: "h-4 w-4 text-scarlet focus:ring-scarlet border-gray-300" %>
+            <%= f.label :role_instructor, "Instructor",
+                class: "ml-3 block text-sm font-medium text-gray-900" %>
+          </div>
+          <div class="flex items-center">
+            <%= f.radio_button :role, "admin",
+                class: "h-4 w-4 text-scarlet focus:ring-scarlet border-gray-300" %>
+            <%= f.label :role_admin, "Administrator",
+                class: "ml-3 block text-sm font-medium text-gray-900" %>
+          </div>
+        </div>
+        <small class="form-help">Instructor and Admin accounts require approval</small>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <%= f.label :password, "Password", class: "form-label" %>
+        <%= f.password_field :password,
+            autocomplete: "new-password",
+            class: "form-input",
+            placeholder: "Create a strong password" %>
+        <% if @minimum_password_length %>
+          <small class="form-help">Minimum <%= @minimum_password_length %> characters</small>
+        <% end %>
+      </div>
+
+      <!-- Password Confirmation -->
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirm Password", class: "form-label" %>
+        <%= f.password_field :password_confirmation,
+            autocomplete: "new-password",
+            class: "form-input",
+            placeholder: "Confirm your password" %>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <%= f.submit "Create Account", class: "btn btn-primary btn-full" %>
+      </div>
+    <% end %>
+
+    <!-- Divider -->
+    <div class="mt-8">
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300" />
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-4 bg-white text-gray-500">or</span>
+        </div>
+      </div>
+
+      <!-- Additional Links -->
+      <div class="auth-links">
+        <%= link_to "Already have an account?", new_session_path(resource_name), 
+            class: "btn btn-outline" %>
+        <%= link_to "← Back to Home", root_path, 
+            class: "text-sm text-gray-600 hover:text-scarlet transition-colors" %>
+      </div>
+    </div>
+  </div>
+</div>

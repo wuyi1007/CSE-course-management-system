@@ -1,0 +1,63 @@
+<!-- Development Password Reset Helper -->
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title">🔧 Development Password Reset</h1>
+      <p class="auth-subtitle">Your password reset link has been generated!</p>
+    </div>
+
+    <div class="dev-reset-content">
+      <div class="reset-info-card">
+        <h3 class="info-title">Reset Link Generated</h3>
+        <p class="info-description">
+          In development mode, emails are not sent. Instead, you can use the link below to reset your password.
+        </p>
+        
+        <div class="reset-link-container">
+          <label class="form-label">Password Reset Link:</label>
+          <div class="link-display">
+            <input type="text" 
+                   value="<%= @reset_url %>" 
+                   readonly 
+                   class="form-input link-input"
+                   onclick="this.select()">
+            <button type="button" 
+                    class="btn btn-secondary btn-copy" 
+                    onclick="copyToClipboard('<%= @reset_url %>')">
+              📋 Copy Link
+            </button>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <%= link_to "Go to Reset Form", @reset_url, class: "btn btn-primary btn-full" %>
+          <%= link_to "Back to Login", new_user_session_path, class: "btn btn-outline btn-full" %>
+        </div>
+      </div>
+
+      <div class="dev-note">
+        <h4>Development Note:</h4>
+        <p>This page only appears in development mode. In production, users would receive an email with the reset link.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = '✅ Copied!';
+    button.classList.add('btn-success');
+    
+    setTimeout(function() {
+      button.textContent = originalText;
+      button.classList.remove('btn-success');
+    }, 2000);
+  }).catch(function(err) {
+    console.error('Could not copy text: ', err);
+    alert('Could not copy to clipboard. Please copy manually.');
+  });
+}
+</script>

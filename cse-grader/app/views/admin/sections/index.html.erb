@@ -1,0 +1,59 @@
+<h1>Sections for <%= @course.title %></h1>
+
+<!-- Semester Dropdown Filter -->
+<%= form_with url: admin_course_sections_path(@course), method: :get, local: true do |f| %>
+  <label>Select Semester:</label>
+  <%= select_tag :semester,
+                 options_for_select(@course.sections.distinct.pluck(:semester), params[:semester]),
+                 include_blank: "All" %>
+
+  <%= f.submit "Filter" %>
+<% end %>
+
+<p>
+  <%= link_to "Add Section", new_admin_course_section_path(@course), class: "btn btn-primary" %>
+</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Section Code</th>
+      <th>Semester</th>
+      <th>Type</th>
+      <th>Meeting Day</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Required Graders</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sections.each do |section| %>
+      <tr>
+        <td><%= section.section_code %></td>
+        <td><%= section.semester %></td>
+        <td><%= section.component %></td>
+        <td><%= section.meeting_day %></td>
+        <td><%= section.meeting_start %></td>
+        <td><%= section.meeting_end %></td>
+        <td><%= section.required_graders %></td>
+        <td>
+          <%= link_to "Edit", edit_admin_course_section_path(@course, section), class: "btn btn-sm btn-secondary" %>
+
+          <%= link_to "Delete",
+            admin_course_section_path(@course, section),
+            method: :delete,
+            data: {
+                turbo_confirm: "Are you sure?",
+                turbo: "false",
+                turbo_frame: "_top"
+            },
+            class: "btn btn-sm btn-danger"
+          %>
+
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,93 @@
+<!-- Edit Account Page -->
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="flex justify-center items-center mb-8">
+        <div class="bg-scarlet text-white font-bold text-2xl px-4 py-2 rounded-lg mr-4">
+          OSU
+        </div>
+        <div class="text-left">
+          <h1 class="text-2xl font-bold text-gray-800">CSE Grader Management System</h1>
+        </div>
+      </div>
+      <h1 class="auth-title">Edit Account</h1>
+      <p class="auth-subtitle">Update your account information</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <%= f.label :email, "Email Address", class: "form-label" %>
+        <%= f.email_field :email,
+            autofocus: true,
+            autocomplete: "email",
+            class: "form-input",
+            placeholder: "name.#@osu.edu" %>
+      </div>
+
+      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <p class="text-sm text-yellow-800">
+            Currently waiting confirmation for: <strong><%= resource.unconfirmed_email %></strong>
+          </p>
+        </div>
+      <% end %>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <%= f.label :password, "New Password", class: "form-label" %>
+        <%= f.password_field :password,
+            autocomplete: "new-password",
+            class: "form-input",
+            placeholder: "Leave blank if you don't want to change it" %>
+        <% if @minimum_password_length %>
+          <small class="form-help">Minimum <%= @minimum_password_length %> characters</small>
+        <% end %>
+      </div>
+
+      <!-- Password Confirmation -->
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirm New Password", class: "form-label" %>
+        <%= f.password_field :password_confirmation,
+            autocomplete: "new-password",
+            class: "form-input",
+            placeholder: "Confirm your new password" %>
+      </div>
+
+      <!-- Current Password -->
+      <div class="form-group">
+        <%= f.label :current_password, "Current Password", class: "form-label" %>
+        <%= f.password_field :current_password,
+            autocomplete: "current-password",
+            class: "form-input",
+            placeholder: "Enter your current password to confirm changes" %>
+        <small class="form-help">We need your current password to confirm your changes</small>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <%= f.submit "Update Account", class: "btn btn-primary btn-full" %>
+      </div>
+    <% end %>
+
+    <!-- Account Deletion Section -->
+    <div class="mt-12 pt-8 border-t border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Cancel Account</h3>
+      <p class="text-sm text-gray-600 mb-4">Unhappy with the service? You can cancel your account below.</p>
+      <div class="text-center">
+        <%= button_to "Cancel my account", registration_path(resource_name),
+            data: { confirm: "Are you sure? This action cannot be undone.", turbo_confirm: "Are you sure? This action cannot be undone." },
+            method: :delete,
+            class: "btn btn-outline" %>
+      </div>
+    </div>
+
+    <!-- Back Link -->
+    <div class="auth-links">
+      <%= link_to "← Back", :back, 
+          class: "text-sm text-gray-600 hover:text-scarlet transition-colors" %>
+    </div>
+  </div>
+</div>

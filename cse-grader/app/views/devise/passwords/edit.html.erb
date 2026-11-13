@@ -1,0 +1,71 @@
+<!-- Password Reset Form -->
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="flex justify-center items-center mb-8">
+        <div class="bg-scarlet text-white font-bold text-2xl px-4 py-2 rounded-lg mr-4">
+          OSU
+        </div>
+        <div class="text-left">
+          <h1 class="text-2xl font-bold text-gray-800">CSE Grader Management System</h1>
+        </div>
+      </div>
+      <h1 class="auth-title">Set New Password</h1>
+      <p class="auth-subtitle">Enter your new password below to complete the reset process.</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <%= f.hidden_field :reset_password_token %>
+
+      <!-- New Password Field -->
+      <div class="form-group">
+        <%= f.label :password, "New Password", class: "form-label" %>
+        <%= f.password_field :password, 
+            autofocus: true, 
+            autocomplete: "new-password",
+            class: "form-input",
+            placeholder: "Enter your new password",
+            required: true %>
+        <% if @minimum_password_length %>
+          <small class="form-help">Password must be at least <%= @minimum_password_length %> characters long</small>
+        <% end %>
+      </div>
+
+      <!-- Password Confirmation -->
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirm New Password", class: "form-label" %>
+        <%= f.password_field :password_confirmation, 
+            autocomplete: "new-password",
+            class: "form-input",
+            placeholder: "Confirm your new password",
+            required: true %>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <%= f.submit "Update Password", class: "btn btn-primary btn-full" %>
+      </div>
+    <% end %>
+
+    <!-- Divider -->
+    <div class="mt-8">
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300" />
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-4 bg-white text-gray-500">or</span>
+        </div>
+      </div>
+
+      <!-- Additional Links -->
+      <div class="auth-links">
+        <%= link_to "Back to Login", new_user_session_path, 
+            class: "btn btn-outline" %>
+        <%= link_to "← Back to Home", root_path, 
+            class: "text-sm text-gray-600 hover:text-scarlet transition-colors" %>
+      </div>
+    </div>
+  </div>
+</div>

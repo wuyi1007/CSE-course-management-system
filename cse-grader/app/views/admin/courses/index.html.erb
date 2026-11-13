@@ -1,0 +1,229 @@
+<!-- Page Header -->
+<div class="card content-section" style="border-bottom: 1px solid var(--gray-200);">
+  <div class="container-wide">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold" style="color: var(--gray-800);">Course Management</h1>
+        <p style="margin-top: var(--spacing-sm); color: var(--gray-600);">Manage courses and sections in the catalog</p>
+      </div>
+      <div class="flex items-center gap-md">
+        <%= link_to "Add New Course", new_admin_course_path, class: "btn btn-primary" %>
+        <div class="text-right">
+          <div class="text-sm" style="color: var(--gray-500);">Total Courses</div>
+          <div class="text-2xl font-bold" style="color: var(--osu-scarlet);">
+            <% if @pagy %>
+              <%= @pagy.count %>
+            <% else %>
+              0
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="card" style="border-bottom: 1px solid var(--gray-200);">
+  <div class="container-wide">
+    <%= form_with url: admin_courses_path, method: :get, local: true, class: "space-y-6" do %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="form-group">
+          <label for="subject" class="form-label">Subject Code</label>
+          <%= text_field_tag :subject, params[:subject], 
+              class: "form-input", 
+              placeholder: "e.g., CSE, MATH, STAT" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="level" class="form-label">Course Level</label>
+          <%= select_tag :level, 
+              options_for_select([
+                ['All Levels', ''],
+                ['1000 Level', '1xxx'],
+                ['2000 Level', '2xxx'],
+                ['3000 Level', '3xxx'],
+                ['4000 Level', '4xxx'],
+                ['5000 Level', '5xxx']
+              ], params[:level]), 
+              class: "form-select" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="campus" class="form-label">Campus</label>
+          <%= select_tag :campus, 
+              options_for_select([
+                ['All Campuses', ''],
+                ['Columbus', 'Columbus'],
+                ['Lima', 'Lima'],
+                ['Mansfield', 'Mansfield'],
+                ['Marion', 'Marion'],
+                ['Newark', 'Newark'],
+                ['Wooster', 'Wooster']
+              ], params[:campus]), 
+              class: "form-select" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="term" class="form-label">Term</label>
+          <%= text_field_tag :term, params[:term], 
+              class: "form-input", 
+              placeholder: "e.g., Spring 2026" %>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label for="q" class="form-label">Keyword Search</label>
+          <%= text_field_tag :q, params[:q], 
+              class: "form-input", 
+              placeholder: "Search in title or description" %>
+        </div>
+        
+        <div class="flex items-end">
+          <%= submit_tag "Search Courses", class: "btn btn-primary" %>
+        </div>
+      </div>
+      
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <%= link_to "Clear Filters", admin_courses_path, class: "btn btn-secondary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Results Section -->
+<div class="container-wide" style="padding: var(--spacing-xl) 0;">
+  <!-- Results Header -->
+  <% if @pagy %>
+    <div class="flex justify-between items-center mb-lg">
+      <div class="text-sm" style="color: var(--gray-600);">
+        Showing <%= @pagy.from %> to <%= @pagy.to %> of <%= @pagy.count %> courses
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Courses Table -->
+  <div class="table-container">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-left">Course</th>
+            <th class="text-left">Title</th>
+            <th class="text-center">Term</th>
+            <th class="text-center">Campus</th>
+            <th class="text-center">Sections</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @courses && @courses.any? %>
+            <% @courses.each do |course| %>
+              <tr class="hover:bg-gray-50">
+                <td class="py-4">
+                  <div class="flex items-center">
+                    <span class="bg-scarlet text-white text-xs font-semibold px-2 py-1 rounded">
+                      <%= course.subject %>
+                    </span>
+                    <span class="ml-3 font-mono text-lg font-bold text-gray-dark">
+                      <%= course.catalog_number %>
+                    </span>
+                  </div>
+                </td>
+                <td class="py-4">
+                  <div class="text-gray-dark font-medium">
+                    <%= course.title %>
+                  </div>
+                  <% if course.short_description.present? %>
+                    <div class="text-sm text-gray-600 mt-1">
+                      <%= truncate(course.short_description, length: 100) %>
+                    </div>
+                  <% end %>
+                </td>
+                <td class="py-4 text-center">
+                  <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    <%= course.term %>
+                  </span>
+                </td>
+                <td class="py-4 text-center">
+                  <span class="text-gray-600 text-sm">
+                    <%= course.campus %>
+                  </span>
+                </td>
+                <td class="py-4 text-center">
+                <% if course.sections.any? %>
+                  <!-- Offered -->
+                  <div class="flex flex-col items-center">
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                      Offered
+                    </span>
+                    <span class="text-gray-600 text-sm">
+                      <%= pluralize(course.sections.count, 'section') %>
+                    </span>
+                  </div>
+                <% else %>
+                  <!-- Not offered -->
+                  <div class="flex flex-col items-center">
+                    <span class="bg-gray-200 text-gray-700 text-xs font-medium px-2.5 py-0.5 rounded-full mb-1">
+                      Not offered
+                    </span>
+                    <span class="text-gray-500 text-sm">0 sections</span>
+                  </div>
+                <% end %>
+              </td>
+
+                <td class="py-4 text-center">
+                  <div class="flex items-center justify-center gap-2">
+                    <%= link_to "View", admin_course_path(course), 
+                        class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+                    <%= link_to "Edit", edit_admin_course_path(course), 
+                        class: "text-yellow-600 hover:text-yellow-800 text-sm font-medium" %>
+                    <%= link_to "Delete", admin_course_path(course), 
+                        method: :delete, 
+                        data: { turbo_confirm: "Are you sure you want to delete this course? This will also delete all associated sections." },
+                        class: "text-red-600 hover:text-red-800 text-sm font-medium" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6" class="py-12 text-center">
+                <div class="flex flex-col items-center">
+                  <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                  </svg>
+                  <h3 class="text-lg font-medium text-gray-dark mb-2">No courses found</h3>
+                  <p class="text-gray-600 mb-4">Try adjusting your search criteria or add a new course.</p>
+                  <%= link_to "Add New Course", new_admin_course_path, 
+                      class: "bg-scarlet text-white px-4 py-2 rounded-lg hover:bg-scarlet-dark transition-all duration-200" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <% if @pagy %>
+    <div style="margin-top: var(--spacing-xl); display: flex; justify-content: space-between; align-items: center;">
+      <div class="text-sm" style="color: var(--gray-600);">
+        Page <%= @pagy.page %> of <%= @pagy.pages %>
+      </div>
+      <div class="flex items-center gap-sm">
+        <!-- Simple pagination links -->
+        <% if @pagy.page > 1 %>
+          <%= link_to "← Previous", admin_courses_path(request.query_parameters.merge(page: @pagy.page - 1)), class: "btn btn-secondary btn-sm" %>
+        <% end %>
+        <% if @pagy.page < @pagy.pages %>
+          <%= link_to "Next →", admin_courses_path(request.query_parameters.merge(page: @pagy.page + 1)), class: "btn btn-secondary btn-sm" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

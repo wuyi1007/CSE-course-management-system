@@ -1,0 +1,130 @@
+<!-- Page Header -->
+<div class="card content-section" style="border-bottom: 1px solid var(--gray-200);">
+  <div class="container-wide">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold" style="color: var(--gray-800);">Add New Course</h1>
+        <p style="margin-top: var(--spacing-sm); color: var(--gray-600);">Create a new course in the catalog</p>
+      </div>
+      <div class="flex items-center gap-md">
+        <%= link_to "Back to Courses", admin_courses_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Course Form -->
+<div class="container-wide" style="padding: var(--spacing-xl) 0;">
+  <div class="max-w-4xl mx-auto">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Course Information</h2>
+        <p class="card-subtitle">Fill in the details for the new course</p>
+      </div>
+      
+      <%= form_with model: [:admin, @course], local: true, class: "space-y-6" do |form| %>
+        <% if @course.errors.any? %>
+          <div class="alert alert-error">
+            <h4 class="font-semibold mb-2">Please fix the following errors:</h4>
+            <ul class="list-disc list-inside space-y-1">
+              <% @course.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="form-group">
+            <%= form.label :course_id, "Course ID", class: "form-label" %>
+            <%= form.text_field :course_id, 
+                class: "form-input", 
+                placeholder: "e.g., CSE-2221-AUT2024" %>
+            <p class="mt-1 text-sm text-gray-500">Unique identifier for this course</p>
+          </div>
+          
+          <div class="form-group">
+            <%= form.label :subject, "Subject Code", class: "form-label" %>
+            <%= form.text_field :subject, 
+                class: "form-input", 
+                placeholder: "e.g., CSE, MATH, STAT" %>
+            <p class="mt-1 text-sm text-gray-500">Department subject code</p>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="form-group">
+            <%= form.label :catalog_number, "Catalog Number", class: "form-label" %>
+            <%= form.text_field :catalog_number, 
+                class: "form-input", 
+                placeholder: "e.g., 2221" %>
+            <p class="mt-1 text-sm text-gray-500">Course number within the subject</p>
+          </div>
+          
+          <div class="form-group">
+            <%= form.label :term, "Term", class: "form-label" %>
+            <%= form.text_field :term, 
+                class: "form-input", 
+                placeholder: "e.g., 1248, Autumn 2024" %>
+            <p class="mt-1 text-sm text-gray-500">Academic term or semester</p>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="form-group">
+            <%= form.label :campus, "Campus", class: "form-label" %>
+            <%= form.select :campus, 
+                options_for_select([
+                  ['Columbus', 'Columbus'],
+                  ['Lima', 'Lima'],
+                  ['Mansfield', 'Mansfield'],
+                  ['Marion', 'Marion'],
+                  ['Newark', 'Newark'],
+                  ['Wooster', 'Wooster']
+                ], @course.campus), 
+                { prompt: "Select Campus" },
+                class: "form-select" %>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <%= form.label :title, "Course Title", class: "form-label" %>
+          <%= form.text_field :title, 
+              class: "form-input", 
+              placeholder: "e.g., Software I: Components" %>
+          <p class="mt-1 text-sm text-gray-500">Full course title</p>
+        </div>
+        
+        <div class="form-group">
+          <%= form.label :short_description, "Short Description", class: "form-label" %>
+          <%= form.text_area :short_description, 
+              class: "form-input", 
+              rows: 3,
+              placeholder: "Brief description of the course" %>
+          <p class="mt-1 text-sm text-gray-500">Brief summary for course listings</p>
+        </div>
+        
+        <div class="form-group">
+          <%= form.label :description, "Full Description", class: "form-label" %>
+          <%= form.text_area :description, 
+              class: "form-input", 
+              rows: 6,
+              placeholder: "Detailed course description, prerequisites, objectives, etc." %>
+          <p class="mt-1 text-sm text-gray-500">Detailed course information</p>
+        </div>
+        
+        <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+          <div class="text-sm text-gray-600">
+            <p>All fields marked with * are required</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <%= link_to "Cancel", admin_courses_path, 
+                class: "btn btn-secondary" %>
+            <%= form.submit "Create Course", 
+                class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

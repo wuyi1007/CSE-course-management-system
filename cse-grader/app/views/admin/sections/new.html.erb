@@ -1,0 +1,5 @@
+<h1>New Section for <%= @course.title %></h1>
+
+<%= render "form", section: @section, course: @course %>
+
+<%= link_to "Back", admin_course_sections_path(@course) %>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "CSE Grader Management System" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="sr-only">Skip to main content</a>
+    
+    <!-- Navigation Header -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <div class="container-wide">
+        <div class="navbar-content">
+          <!-- OSU Logo and Brand -->
+          <div class="navbar-brand">
+            <div class="navbar-logo">OSU</div>
+            <div class="navbar-title">CSE Grader Management System</div>
+          </div>
+          
+          <!-- Navigation Menu -->
+          <div class="navbar-nav">
+            <% if user_signed_in? %>
+              <!-- User Info -->
+              <div class="navbar-user-info">
+                <div class="navbar-user-details">
+                  <div class="navbar-user-email"><%= current_user.name || current_user.email %></div>
+                  <div class="navbar-user-role"><%= current_user.role&.capitalize %></div>
+                </div>
+                <div class="navbar-user-avatar">
+                  <span class="navbar-user-initial">
+                    <%= (current_user.name || current_user.email).first.upcase %>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Navigation Links -->
+              <div class="navbar-nav-links">
+                <%= link_to "Browse Courses", catalog_index_path, class: "nav-link", aria_label: "Browse available courses" %>
+                <% if current_user.admin? %>
+                  <%= link_to "Manage Courses", admin_courses_path, class: "nav-link", aria_label: "Manage courses" %>
+                  <%= link_to "User Approvals", admin_catalogs_approvals_path, class: "nav-link", aria_label: "Approve users" %>
+                  <%= link_to "Reload Catalog", admin_catalogs_reload_path, class: "nav-link", aria_label: "Reload course catalog from API" %>
+                <% end %>
+                <%= link_to "Profile", edit_user_registration_path, class: "nav-link", aria_label: "View user profile" %>
+                <%= link_to "Logout", destroy_user_session_path,
+                    method: :delete,
+                    data: { turbo_method: :delete },
+                    class: "btn btn-secondary btn-sm",
+                    aria_label: "Sign out of your account" %>
+              </div>
+            <% else %>
+              <!-- Guest Navigation -->
+              <div class="navbar-nav-links">
+                <%= link_to "Login", new_user_session_path, 
+                    class: "nav-link", 
+                    aria_label: "Sign in to your account" %>
+                <%= link_to "Sign Up", new_user_registration_path, 
+                    class: "btn btn-secondary btn-sm", 
+                    aria_label: "Create a new account" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+      <!-- Flash Messages -->
+      <% if notice %>
+        <div class="alert alert-success animate-slide-down" role="alert" aria-live="polite">
+          <p><%= notice %></p>
+        </div>
+      <% end %>
+
+      <% if alert %>
+        <div class="alert alert-error animate-slide-down" role="alert" aria-live="polite">
+          <p><%= alert %></p>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container-wide">
+        <div class="text-center">
+          <h3 class="text-lg font-semibold mb-sm">CSE Grader Management System</h3>
+          <p style="color: var(--gray-300);">Computer Science & Engineering Department</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

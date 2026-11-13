@@ -1,0 +1,51 @@
+<%= form_with model: [:admin, @course], local: true do |f| %>
+  <% if @course.errors.any? %>
+    <ul style="color:red;">
+      <% @course.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <div>
+    <%= f.label :course_id, "Course ID" %><br>
+    <%= f.text_field :course_id %>
+  </div>
+
+  <div>
+    <%= f.label :subject, "Subject" %><br>
+    <%= f.text_field :subject %>
+  </div>
+
+  <div>
+    <%= f.label :catalog_number, "Catalog Number" %><br>
+    <%= f.text_field :catalog_number %>
+  </div>
+
+  <div>
+    <%= f.label :title, "Title" %><br>
+    <%= f.text_field :title %>
+  </div>
+
+  <div>
+    <%= f.label :short_description, "Short Description" %><br>
+    <%= f.text_field :short_description %>
+  </div>
+
+  <div>
+    <%= f.label :description, "Description" %><br>
+    <%= f.text_area :description, rows: 5 %>
+  </div>
+
+  <div>
+    <%= f.label :term, "Term" %><br>
+    <%= f.text_field :term %>
+  </div>
+
+  <div>
+    <%= f.label :campus, "Campus" %><br>
+    <%= f.text_field :campus %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

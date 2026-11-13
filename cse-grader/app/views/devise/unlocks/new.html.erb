@@ -1,0 +1,56 @@
+<!-- Resend Unlock Instructions -->
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="flex justify-center items-center mb-8">
+        <div class="bg-scarlet text-white font-bold text-2xl px-4 py-2 rounded-lg mr-4">
+          OSU
+        </div>
+        <div class="text-left">
+          <h1 class="text-2xl font-bold text-gray-800">CSE Grader Management System</h1>
+        </div>
+      </div>
+      <h1 class="auth-title">Resend Unlock Instructions</h1>
+      <p class="auth-subtitle">Enter your email to resend unlock instructions</p>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post, class: "auth-form" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <%= f.label :email, "Email Address", class: "form-label" %>
+        <%= f.email_field :email,
+            autofocus: true,
+            autocomplete: "email",
+            class: "form-input",
+            placeholder: "name.#@osu.edu" %>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <%= f.submit "Resend Unlock Instructions", class: "btn btn-primary btn-full" %>
+      </div>
+    <% end %>
+
+    <!-- Divider -->
+    <div class="mt-8">
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300" />
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-4 bg-white text-gray-500">or</span>
+        </div>
+      </div>
+
+      <!-- Additional Links -->
+      <div class="auth-links">
+        <%= link_to "Back to Login", new_user_session_path, 
+            class: "btn btn-outline" %>
+        <%= link_to "← Back to Home", root_path, 
+            class: "text-sm text-gray-600 hover:text-scarlet transition-colors" %>
+      </div>
+    </div>
+  </div>
+</div>

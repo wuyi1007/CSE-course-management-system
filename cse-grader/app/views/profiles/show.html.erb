@@ -1,0 +1,167 @@
+<!-- Profile screen lets users manage credentials and view account information -->
+<div class="profile-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">My Profile</h1>
+    <p class="page-subtitle">Manage your account information and security settings</p>
+  </div>
+
+  <div class="profile-content">
+    <!-- User Information Section -->
+    <section class="profile-section">
+      <div class="section-header">
+        <h2 class="section-title">Account Information</h2>
+        <div class="section-icon">👤</div>
+      </div>
+      
+      <div class="user-info-card">
+        <div class="user-avatar-large">
+          <span class="user-initials">
+            <%= (current_user.name || current_user.email).first.upcase %>
+          </span>
+        </div>
+        
+        <div class="user-details">
+          <div class="user-detail-item">
+            <label class="detail-label">Name</label>
+            <span class="detail-value"><%= current_user.name.present? ? current_user.name : "Not provided" %></span>
+          </div>
+          
+          <div class="user-detail-item">
+            <label class="detail-label">Email</label>
+            <span class="detail-value"><%= current_user.email %></span>
+          </div>
+          
+          <div class="user-detail-item">
+            <label class="detail-label">Role</label>
+            <span class="detail-value">
+              <%= role_badge(current_user.role) %>
+            </span>
+          </div>
+          
+          <div class="user-detail-item">
+            <label class="detail-label">Account Status</label>
+            <span class="detail-value">
+              <%= status_badge(current_user.approved? ? 'approved' : 'pending') %>
+            </span>
+          </div>
+          
+          <div class="user-detail-item">
+            <label class="detail-label">Member Since</label>
+            <span class="detail-value"><%= format_date(current_user.created_at, format: :long) %></span>
+          </div>
+          
+          <div class="user-detail-item">
+            <label class="detail-label">Last Sign In</label>
+            <span class="detail-value">
+              <%= current_user.last_sign_in_at ? format_date(current_user.last_sign_in_at, format: :time) : "Never" %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Password Change Section -->
+    <section class="profile-section">
+      <div class="section-header">
+        <h2 class="section-title">Change Password</h2>
+        <div class="section-icon">🔒</div>
+      </div>
+      
+      <div class="password-form-card">
+        <p class="form-description">Enter your current password and choose a new one to update your account security.</p>
+
+        <%= form_with model: current_user, url: profile_path, method: :put, local: true, class: "password-form" do |f| %>
+          <div class="form-group">
+            <%= f.label :current_password, "Current Password", class: "form-label" %>
+            <%= f.password_field :current_password, 
+                autocomplete: "current-password", 
+                class: "form-input",
+                placeholder: "Enter your current password",
+                required: true %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password, "New Password", class: "form-label" %>
+            <%= f.password_field :password, 
+                autocomplete: "new-password", 
+                class: "form-input",
+                placeholder: "Enter your new password",
+                required: true %>
+            <small class="form-help">Password must be at least 6 characters long</small>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password_confirmation, "Confirm New Password", class: "form-label" %>
+            <%= f.password_field :password_confirmation, 
+                autocomplete: "new-password", 
+                class: "form-input",
+                placeholder: "Confirm your new password",
+                required: true %>
+          </div>
+
+          <% if current_user.errors.any? %>
+            <div class="form-errors">
+              <h4 class="error-title">Please fix the following errors:</h4>
+              <ul class="error-list">
+                <% current_user.errors.full_messages.each do |msg| %>
+                  <li class="error-item"><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="form-actions">
+            <%= f.submit "Update Password", class: "btn btn-primary" %>
+            <button type="button" class="btn btn-secondary" onclick="clearPasswordForm()">Clear Form</button>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <!-- Account Actions Section -->
+    <section class="profile-section">
+      <div class="section-header">
+        <h2 class="section-title">Account Actions</h2>
+        <div class="section-icon">⚙️</div>
+      </div>
+      
+      <div class="actions-card">
+        <div class="action-item">
+          <div class="action-info">
+            <h3 class="action-title">Edit Profile Information</h3>
+            <p class="action-description">Update your name and other personal details</p>
+          </div>
+          <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-outline" %>
+        </div>
+        
+        <div class="action-item">
+          <div class="action-info">
+            <h3 class="action-title">Forgot Password?</h3>
+            <p class="action-description">Can't remember your password? Request a reset link via email</p>
+          </div>
+          <%= link_to "Reset Password", new_user_password_path, class: "btn btn-outline" %>
+        </div>
+        
+        <div class="action-item">
+          <div class="action-info">
+            <h3 class="action-title">Sign Out</h3>
+            <p class="action-description">Sign out of your account on this device</p>
+          </div>
+          <%= button_to "Sign Out", destroy_user_session_path,
+              method: :delete,
+              class: "btn btn-outline",
+              data: { turbo_confirm: "Are you sure you want to sign out?" } %>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+function clearPasswordForm() {
+  document.querySelectorAll('.password-form input[type="password"]').forEach(input => {
+    input.value = '';
+  });
+}
+</script>

@@ -1,0 +1,120 @@
+<!-- Page Header -->
+<div class="card content-section" style="border-bottom: 1px solid var(--gray-200);">
+  <div class="container-wide">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold" style="color: var(--gray-800);">Admin Dashboard</h1>
+        <p style="margin-top: var(--spacing-sm); color: var(--gray-600);">Manage users, courses, and system settings</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dashboard Content -->
+<div class="container-wide" style="padding: var(--spacing-xl) 0;">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Pending Approvals Section -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Pending Approvals</h2>
+        <p class="card-subtitle">Review user registration requests</p>
+      </div>
+      
+      <% if @pending_count.positive? %>
+        <div class="space-y-4">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <div class="text-2xl font-bold text-gray-dark">
+                <%= @pending_count %>
+              </div>
+              <div class="text-sm text-gray-600">Pending Approvals</div>
+            </div>
+          </div>
+          <p class="text-gray-600"><%= @pending_count %> instructor/admin account(s) await approval.</p>
+          <%= link_to "Review Pending Users", approvals_admin_catalog_path, class: "btn btn-primary" %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <svg class="w-12 h-12 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="text-lg font-medium text-gray-dark mb-2">All caught up!</h3>
+          <p class="text-gray-600">No pending instructor/admin requests.</p>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Course Management Section -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Course Management</h2>
+        <p class="card-subtitle">Manage course catalog and data</p>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <div class="text-2xl font-bold text-gray-dark">
+              <%= Course.count %>
+            </div>
+            <div class="text-sm text-gray-600">Total Courses</div>
+          </div>
+        </div>
+        
+        <div class="space-y-3">
+          <%= link_to "Manage Courses", admin_courses_path, class: "btn btn-primary w-full" %>
+          <%= link_to "Reload Course Data", reload_admin_catalog_path, class: "btn btn-secondary w-full" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Quick Actions -->
+  <div class="mt-8">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Quick Actions</h2>
+        <p class="card-subtitle">Common administrative tasks</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="text-center p-4 border border-gray-200 rounded-lg">
+          <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+          </svg>
+          <h3 class="font-semibold text-gray-800 mb-1">User Management</h3>
+          <p class="text-sm text-gray-600 mb-3">Manage user accounts and permissions</p>
+          <%= link_to "View Users", approvals_admin_catalog_path, class: "btn btn-secondary btn-sm" %>
+        </div>
+        
+        <div class="text-center p-4 border border-gray-200 rounded-lg">
+          <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          <h3 class="font-semibold text-gray-800 mb-1">Course Catalog</h3>
+          <p class="text-sm text-gray-600 mb-3">Add, edit, and manage courses</p>
+          <%= link_to "Manage Courses", admin_courses_path, class: "btn btn-secondary btn-sm" %>
+        </div>
+        
+        <div class="text-center p-4 border border-gray-200 rounded-lg">
+          <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          <h3 class="font-semibold text-gray-800 mb-1">Data Sync</h3>
+          <p class="text-sm text-gray-600 mb-3">Reload data from OSU API</p>
+          <%= link_to "Reload Data", reload_admin_catalog_path, class: "btn btn-secondary btn-sm" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
